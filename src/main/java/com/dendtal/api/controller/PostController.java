@@ -19,19 +19,9 @@ public class PostController {
     @PostMapping ("/posts")
     //public String post(@RequestParam String title, @RequestParam String content){
     //public String post(@RequestParam Map<String,String> params){
-    public Map<String, String> post(@RequestBody @Valid PostCreate params, BindingResult result) {  // ModelAttribute는 생략가능
+
+    public Map<String, String> post(@RequestBody @Valid PostCreate params) {  // ModelAttribute는 생략가능
         log.info("params={}",params.toString());
-
-        if (result.hasErrors()) {
-            List<FieldError> fieldErrors = result.getFieldErrors();
-            FieldError firstFieldError = fieldErrors.get(0);
-            String fieldName = firstFieldError.getField(); // title
-            String errorMessage = firstFieldError.getDefaultMessage(); // ...에러 메시지
-
-            Map<String, String> error = new HashMap<>();
-            error.put(fieldName, errorMessage);
-            return error;
-        }
 
         return Map.of();
     }
