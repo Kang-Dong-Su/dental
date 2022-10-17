@@ -27,12 +27,16 @@ public class PostService {
     }
     */
 
-    public void write(PostCreate postCreate) {
+    public Long write(PostCreate postCreate) {
         // 일반 class인 postCreate -> Entity화
 
-        Post post = new Post(postCreate.getTitle(), postCreate.getContent());
+        Post post = Post.builder()
+                .title(postCreate.getTitle())
+                .content(postCreate.getContent())
+                .build();
         postRepository.save(post);
 
+        return post.getId();
 
     }
 }
