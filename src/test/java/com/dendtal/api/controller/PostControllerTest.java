@@ -39,7 +39,7 @@ class PostControllerTest {
     private PostRepository postRepository;
 
     @BeforeEach
-    void clean(){
+    void clean() {
         postRepository.deleteAll();
     }
 
@@ -49,7 +49,7 @@ class PostControllerTest {
         // given
 
         //PostCreate request = new PostCreate("제목입니다.","내용입니다.");
-        PostCreate request =  PostCreate.builder()
+        PostCreate request = PostCreate.builder()
                 .title("제목입니다.")
                 .content("내용입니다.")
                 .build();
@@ -89,7 +89,7 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.validation.title").value("타이틀을 입력해주세요"))
                 .andDo(print());
     }
-    
+
     @Test
     @DisplayName("/posts 요청시 DB에 값이 저장된다")
     void test3() throws Exception {
@@ -99,7 +99,7 @@ class PostControllerTest {
                 .title("제목입니다")
                 .content("내용입니다")
                 .build();
-        
+
         String json = objectMapper.writeValueAsString(request);
 
         // when
@@ -117,6 +117,26 @@ class PostControllerTest {
         assertEquals("제목입니다", post.getTitle());
         assertEquals("내용입니다", post.getContent());
     }
-    
-    
+
+    @Test
+    @DisplayName("글 1개 조회")
+    void test4() throws Exception {
+        //given
+        Post post = Post.builder()
+                .title("foo")
+                .content("bar")
+                .build();
+        postRepository.save(post);
+
+        // expected
+        mockMvc.perform(get("/posts/{postId}", post.getId())
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(post.getId()))
+                .andExpect(jsonPath("$.title").value("foo"))
+                .andExpect(jsonPath("$.content").value("bar"))
+                .andDo(print());
+
+
+    }
 }
