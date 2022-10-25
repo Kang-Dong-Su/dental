@@ -2,6 +2,7 @@ package com.dendtal.api.controller;
 
 import com.dendtal.api.domain.Post;
 import com.dendtal.api.request.PostCreate;
+import com.dendtal.api.response.PostResponse;
 import com.dendtal.api.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,7 @@ public class PostController {
     public final PostService postService;
 
     // ctrl + shift + t  = 테스트 케이스 자동 생성
-    @PostMapping ("/posts")
+    @PostMapping("/posts")
     //public String post(@RequestParam String title, @RequestParam String content){
     //public String post(@RequestParam Map<String,String> params){
 
@@ -36,7 +37,7 @@ public class PostController {
         // Bad Case : 서버에서 -> 반드시 이렇게 할겁니다! fix
         //            -> 서버에서는 차라리 유연하게 대응하는게 좋습니다 -> 코드를 잘 짜야겠죠?! ㅎ
         //            -> 한 번에 일괄적으로 ㅈ라 처리되는 케이스가 없다 -> 잘 관리하는 형태가 중요
-        
+
         postService.write(request);
     }
 
@@ -46,9 +47,16 @@ public class PostController {
      */
 
     @GetMapping("/posts/{postId}")
-    public Post get(@PathVariable(name = "postId") Long id){
-        Post post = postService.get(id);
-        return post;
+    public PostResponse get(@PathVariable Long postId) {
+        //Request 클래스
+        //Response 클래스
+
+        // 서비스 정책에 맞게 응답 클래스를 분리하세요
+        return postService.get(postId);
     }
 
+    @GetMapping("/posts")
+    public List<PostResponse> getList() {
+        return postService.getList();
+    }
 }
